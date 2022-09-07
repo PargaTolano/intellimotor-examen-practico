@@ -1,0 +1,11 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend del examen practico de intellimotor para el puesto de desarrollador fullstack, hecho con node, express y puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Jose Parga Tolano"
+}
