@@ -7,14 +7,18 @@ import {
     Typography
 } from '@mui/material';
 
-import { css, keyframes} from '@emotion/css';
+import { css } from '@emotion/css';
 
 import { 
     useForm, 
-    Controller 
+    Controller,
 } from 'react-hook-form';
 
 import useModal from '../hooks/modal';
+import useLoading from '../hooks/loading';
+import AnuncioService from '../service/anuncioService';
+import { useEffect } from 'react';
+
 const getStyles = ()=>({
     form:  css`
         width: 100%;
@@ -30,11 +34,26 @@ const getStyles = ()=>({
 });
 
 export const Form = () => {
-    const { show } = useModal();
-    const { handleSubmit, control } = useForm();
-    const onsubmit = data =>{
-        console.table(data);
-        show();
+    
+    const { setVisible } = useLoading(); 
+    const { show, setScreenshotURL } = useModal();
+    const { handleSubmit, register, formState:{errors} } = useForm();
+
+    useEffect(()=>console.log(errors), []);
+
+    const onsubmit = async data => {
+        try {
+            const { precio, descripcion } = data;
+            setVisible(true);
+            const url = await AnuncioService.crearAnuncio(precio, descripcion);
+            setScreenshotURL(url);
+            show();
+        } catch (e) {
+            alert(e.message);
+        }
+        finally{
+            setVisible(false);
+        }
     };
 
     // process classes only once
@@ -71,22 +90,15 @@ export const Form = () => {
                                 xs={12} 
                                 padding={2}
                             >
-                                <Controller
-                                    name={'precio'}
-                                    control={control}
-                                    render={({field:{onChange, value}})=>(
-                                        <TextField
-                                            type='number'
-                                            className={classes.field}
-                                            InputProps={{className: classes.input}}
-                                            InputLabelProps={{className: classes.label}}
-                                            onChange={onChange}
-                                            label='Precio'
-                                            value={value}
-                                            variant='filled'
-                                            autoComplete='off'
-                                        />
-                                    )}
+                                <TextField
+                                    {...register('precio', {required: true, minLength: 1, maxLength: 4})}
+                                    type='number'
+                                    className={classes.field}
+                                    InputProps={{className: classes.input}}
+                                    InputLabelProps={{className: classes.label}}
+                                    label='Precio'
+                                    variant='filled'
+                                    autoComplete='off'
                                 />
                             </Grid>
                             <Grid 
@@ -95,28 +107,21 @@ export const Form = () => {
                                 xs={12} 
                                 padding={2}
                             >
-                                <Controller
-                                    name={'descripcion'}
-                                    control={control}
-                                    render={({field:{onChange, value}})=>(
-                                        <TextField 
-                                            className={classes.field}
-                                            InputProps={{className: classes.input}}
-                                            InputLabelProps={{className: classes.label}}
-                                            onChange={onChange} 
-                                            label='Descripcion'
-                                            value={value}
-                                            multiline
-                                            rows={4}
-                                            variant='filled'
-                                            autoComplete='off'
-                                        />
-                                    )}
+                                <TextField
+                                    {...register('descripcion',{required: true, minLength: 1})}
+                                    className={classes.field}
+                                    InputProps={{className: classes.input}}
+                                    InputLabelProps={{className: classes.label}}
+                                    label='Descripcion'
+                                    multiline
+                                    rows={4}
+                                    variant='filled'
+                                    autoComplete='off'
                                 />
                             </Grid>
                         </Grid>
                         <Grid container item xs={12} padding={2}>
-                            <Button fullWidth type='submit' variant='contained'> Publicar Anuncio </Button>
+                            <Button fullWidth type='submit' variant='contained'>Publicar</Button>
                         </Grid>
                     </Grid>
                 </form>

@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "examen-backend",
   "version": "1.0.0",
   "description": "backend del examen practico de intellimotor para el puesto de desarrollador fullstack, hecho con node, express y puppeteer",
   "main": "index.js",
@@ -7,5 +7,18 @@
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "author": "Jose Parga Tolano"
+  "author": "Jose Parga Tolano",
+  "dependencies": {
+    "@ptkdev/logger": "^1.8.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "install": "^0.13.0",
+    "moment": "^2.29.4",
+    "path": "^0.12.7",
+    "puppeteer": "^17.1.3",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
 }

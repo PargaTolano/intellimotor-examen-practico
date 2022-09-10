@@ -2,15 +2,13 @@ import React, { useMemo } from 'react';
 
 import { Box }  from '@mui/material';
 
-import { css, keyframes} from '@emotion/css';
+import { css, keyframes } from '@emotion/css';
 
 import car1 from '../assets/car-404px.png';
 import car2 from '../assets/convertible-404px.png';
 import car3 from '../assets/sports-car-404px.png';
 
-import road from '../assets/road.svg';
-
-const cars= [car1,car2,car3];
+const cars= [ car1, car2, car3 ];
 
 const carAnimation = keyframes`
     0% {
@@ -82,7 +80,7 @@ const CarMarquee = () => {
         <Box className={classes.carMarquee}>
             <Box className={classes.road}/>
             <div className={classes.marqueeContent}>
-                {cars.map(x=><img key={x} className={classes.car} src={x}/>)}
+                {cars.map(x=><img key={x} className={classes.car} src={x} alt='imagen de auto'/>)}
             </div>
         </Box>
     );

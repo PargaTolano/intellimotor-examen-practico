@@ -1,5 +1,6 @@
 const { Request, Response } = require('express');
 const { Page } = require('puppeteer');
+const { log } = require('../logger');
 const anuncioService = require('../service/anuncio.service');
 
 const path=require('path');
@@ -46,9 +47,10 @@ function crearAnuncio(pagina){
             const filename=await anuncioService.crearAnuncio(pagina, precio, descripcion);
             return res
                 .status(200)
-                .sendFile(path.join(__dirname, '..', 'screenshots', filename));
+                .sendFile(path.join(__dirname, '..', 'public', filename));
         }
         catch(e){
+            log.error(e.message);
             return res
                 .status(500)
                 .json({
