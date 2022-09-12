@@ -2,9 +2,14 @@ import { useContext, createContext, useState } from 'react';
 
 const modalContext = createContext({
     visible: false,
-    setVisible: x=>{},
+    show: ()=>{},
+    hide: ()=>{},
     screenshotURL: null,
-    setScreenshotURL: x=>{}
+    resetScreenshotURL: ()=>{},
+    setScreenshotURL: x=>{},
+    liga: null,
+    resetLiga: ()=>{},
+    setLiga: x=>{}
 });
 
 const useLoading = ()=> useContext(modalContext);
@@ -13,11 +18,13 @@ export default useLoading;
 export function ModalProvider(props){
     const [visible, setVisible] = useState(false);
     const [screenshotURL, setScreenshotURL] = useState(null);
+    const [liga, setLiga] = useState(null);
 
     const show=()=>setVisible(true);
     const hide=()=>setVisible(false);
 
     const resetScreenshotURL =()=>setScreenshotURL(null);
+    const resetLiga = ()=>setLiga(null);
 
     const data={
         visible,
@@ -25,7 +32,10 @@ export function ModalProvider(props){
         hide,
         screenshotURL,
         resetScreenshotURL,
-        setScreenshotURL
+        setScreenshotURL,
+        liga,
+        resetLiga,
+        setLiga,
     };
 
     return (

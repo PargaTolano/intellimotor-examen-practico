@@ -29,17 +29,16 @@ const carAnimation = keyframes`
 `;
 
 const getStyles=()=>({
+    container: css`
+        position:   relative;
+        flex:       0 0 auto;
+        // overflow: hidden visible;
+    `,
     carMarquee: css`
         display:        flex;
-        position:       fixed;
-        top:            0;
-        left:           0;
-        width:          100vw;
-        height:         100vh;
-        padding:        0;
+        position:       relative;
         align-items:    flex-end;
         white-space:    nowrap;
-        overflow:       hidden;
         box-sizing:     border-box;
     `,
     marqueeContent: css`
@@ -62,12 +61,10 @@ const getStyles=()=>({
         }
     `,
     road: css`
-        position:   absolute;
-        bottom:     0;
-        left:       0;
         width:      100%;
         height:     6rem;
         background-color: #3B3B3F;
+        box-sizing:     border-box;
     `
 });
 
@@ -77,11 +74,14 @@ const CarMarquee = () => {
     const classes=useMemo(getStyles, []);
 
     return (
-        <Box className={classes.carMarquee}>
-            <Box className={classes.road}/>
-            <div className={classes.marqueeContent}>
-                {cars.map(x=><img key={x} className={classes.car} src={x} alt='imagen de auto'/>)}
-            </div>
+
+        <Box className={classes.container}>
+            <Box className={classes.carMarquee}>
+                <Box className={classes.road}/>
+                <div className={classes.marqueeContent}>
+                    {cars.map(x=><img key={x} className={classes.car} src={x} alt='imagen de auto'/>)}
+                </div>
+            </Box>
         </Box>
     );
 };

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {
     Container,
     TextField,
@@ -9,15 +9,24 @@ import {
 
 import { css } from '@emotion/css';
 
-import { 
-    useForm, 
-    Controller,
-} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import useModal from '../hooks/modal';
 import useLoading from '../hooks/loading';
+
+import { yupResolver }from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import AnuncioService from '../service/anuncioService';
-import { useEffect } from 'react';
+
+const schema = yup.object({
+    precio:         yup.number()
+                        .typeError('tiene que ser un numero')
+                        .positive('tiene que ser positivo')
+                        .integer('tiene que ser un entero')
+                        .required('campo requerido'),
+    descripcion:    yup.string().required('campo requerido'),
+}).required();
 
 const getStyles = ()=>({
     form:  css`
@@ -36,17 +45,24 @@ const getStyles = ()=>({
 export const Form = () => {
     
     const { setVisible } = useLoading(); 
-    const { show, setScreenshotURL } = useModal();
-    const { handleSubmit, register, formState:{errors} } = useForm();
+    const { show, setScreenshotURL, setLiga } = useModal();
+    const { 
+        handleSubmit, 
+        register, 
+        formState:{errors} 
+    } = useForm({resolver: yupResolver(schema)});
 
-    useEffect(()=>console.log(errors), []);
+
 
     const onsubmit = async data => {
         try {
             const { precio, descripcion } = data;
             setVisible(true);
-            const url = await AnuncioService.crearAnuncio(precio, descripcion);
-            setScreenshotURL(url);
+            const { pendiente, ruta, liga} = await AnuncioService.crearAnuncio(precio, descripcion);
+            if(!pendiente)
+                setScreenshotURL(`${process.env.REACT_APP_SCREENSHOTS_URL}/${ruta}`);
+            else
+                setLiga(liga);
             show();
         } catch (e) {
             alert(e.message);
@@ -60,25 +76,25 @@ export const Form = () => {
     const classes = useMemo(getStyles, []);
 
     return (
-        <Container maxWidth={false}>
+        <Container sx={{flex: '1 0 0'}} maxWidth={false}>
             <Grid 
                 container 
-                maxWidth='md' 
-                justifyContent='center' 
-                alignItems='center' 
-                margin='0 auto' 
-                height='100vh'
+                maxWidth=       'md'
+                justifyContent= 'center'
+                alignItems=     'center'
+                margin=         '0 auto'
+                height=         '100%'
             >
                 <form
                     className={classes.form}
                     onSubmit={handleSubmit(onsubmit)}
                 >
                     <Typography 
-                        padding={2} 
-                        textAlign='left' 
-                        variant='h4' 
-                        color='white' 
-                        textTransform='capitalize'
+                        padding=        {2} 
+                        textAlign=      'left' 
+                        variant=        'h4' 
+                        color=          'white' 
+                        textTransform=  'capitalize'
                     >
                         anuncia tu auto
                     </Typography>
@@ -91,7 +107,9 @@ export const Form = () => {
                                 padding={2}
                             >
                                 <TextField
-                                    {...register('precio', {required: true, minLength: 1, maxLength: 4})}
+                                    error={errors.precio}
+                                    helperText={errors.precio?.message}
+                                    {...register('precio', {required: true, minLength: 1})}
                                     type='number'
                                     className={classes.field}
                                     InputProps={{className: classes.input}}
@@ -108,6 +126,8 @@ export const Form = () => {
                                 padding={2}
                             >
                                 <TextField
+                                    error={errors.descripcion}
+                                    helperText={errors.descripcion?.message}
                                     {...register('descripcion',{required: true, minLength: 1})}
                                     className={classes.field}
                                     InputProps={{className: classes.input}}

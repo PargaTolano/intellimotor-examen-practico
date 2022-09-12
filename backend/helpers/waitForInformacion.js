@@ -13,8 +13,6 @@ const numero='8114889772';
 async function waitForInformacion(pagina, precio){
     await waitForTimeout(4000);
 
-    log.info('Llenando informacion del vehiculo y venta...');
-
     // Cliquear dropboxes que no dependen de otras primero
     await pagina.click('[data-activates="dropdown_types"]');
     await pagina.click('#dropdown_types [data-content="autos"]>a');
@@ -35,7 +33,6 @@ async function waitForInformacion(pagina, precio){
 
     const inputTelefono = await pagina.$('#input_teléfono');
     if (inputTelefono){
-        log.info('ingresando telefono');
         await inputTelefono.type(numero);
     }
 
@@ -56,8 +53,6 @@ async function waitForInformacion(pagina, precio){
     await waitForTimeout(1000);
     await pagina.click('[data-activates="dropdown_subtypes"]');
     await pagina.click('#dropdown_subtypes [data-content="sedan"]>a');
-
-    log.info('Listo!');
 } 
 
 module.exports = waitForInformacion;

@@ -4,6 +4,7 @@ const { log } = require('../logger');
 const waitForInformacion = require('../helpers/waitForInformacion');
 const waitForDescripcion = require('../helpers/waitForDescripcion');
 const waitForTimeout = require('../helpers/waitForTimeout');
+const waitForLogin = require('../helpers/waitForLogin');
 
 // constantes
 const paginaURL = 'https://www.seminuevos.com';
@@ -16,9 +17,8 @@ const paginaURL = 'https://www.seminuevos.com';
  * @returns 
  */
 async function crearAnuncio( pagina, precio, descripcion){
-
     log.info(`Crear Anuncio`);
-    await pagina.goto(paginaURL);
+    await waitForLogin(pagina);
 
     const botonVendeTuVehiculo = await pagina.waitForSelector('#primaryNav .btn-primary');
     await Promise.all([
@@ -26,8 +26,8 @@ async function crearAnuncio( pagina, precio, descripcion){
         botonVendeTuVehiculo.click()
     ]);
 
-    log.info('Redirigido a creacion de anuncio');
     await waitForInformacion(pagina, precio);
+    log.info('Se ha llenado la informacion de venta y del vehiculo');
 
     // Siguiente seccion
     await Promise.all([
@@ -36,11 +36,11 @@ async function crearAnuncio( pagina, precio, descripcion){
     ]);
 
     await waitForDescripcion(pagina, descripcion);
+    log.info('Se ha llenado la descripcion y las imagenes');
+   
     const vehiculoId = pagina.url().split('/').pop().trim();
 
     const botonSiguiente = await pagina.waitForSelector('.next-button:not(.back):not(.disabled)');
-    log.info('Botton encontrado');
-
     // subir el anuncio
     await Promise.all([
         pagina.waitForNavigation(),
@@ -51,19 +51,27 @@ async function crearAnuncio( pagina, precio, descripcion){
     await waitForTimeout(5000);
 
     // redirigir a anuncio
-    const anuncioURL = `${paginaURL}/myvehicle/${vehiculoId}`;
-    await pagina.goto(anuncioURL);
+    const liga = `${paginaURL}/myvehicle/${vehiculoId}`;
+    await pagina.goto(liga);
     
-    // esperar a que la pagina se hidrate
-    await pagina.waitForSelector('.loading-data');
-    await pagina.waitForSelector('.loading-data', {hidden: true});
+    try {
+        // Esperar a que la pagina hidrate con error 404
+        await pagina.waitForSelector('.error-404', {timeout: 1000});
+        // Decir al usuario que la peticion esta en proceso en seminuevos.com y que solo use la liga del anuncio en vez
+        return { pendiente: true, ruta: '', liga}
+        
+    } catch {
+        // En caso de no entrar a un error 404 asumimos que el anuncio se publico
+        // Esperar a que los datos carguen esperando a que desaparezca el elemento de carga
+        await pagina.waitForSelector('.loading-data', {hidden: true});
 
-    // tomar screenshot
-    const name =  `${vehiculoId}.png`;
-    const filePath = `./public/${name}`;
-    await pagina.screenshot({path: filePath});
+        // tomar screenshot
+        const ruta =  `${vehiculoId}.png`;
+        const rutaRelativa = `./public/${ruta}`;
+        await pagina.screenshot({path: rutaRelativa});
 
-    return name;
+        return { pendiente: false, ruta, liga};
+    }
 }
 
 module.exports = {crearAnuncio};

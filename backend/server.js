@@ -19,7 +19,6 @@ app.use(express.static('public'));
     // utilizar rutas
     anuncioRutas(app, pagina);
 
-    
     // montar aplicacion
     const port = process.env.PORT || 8081;
     app.listen(port, ()=>{

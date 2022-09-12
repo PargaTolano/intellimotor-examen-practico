@@ -44,10 +44,10 @@ function crearAnuncio(pagina){
                 });
     
         try {
-            const filename=await anuncioService.crearAnuncio(pagina, precio, descripcion);
+            const data= await anuncioService.crearAnuncio(pagina, precio, descripcion);
             return res
                 .status(200)
-                .sendFile(path.join(__dirname, '..', 'public', filename));
+                .json(data);
         }
         catch(e){
             log.error(e.message);
