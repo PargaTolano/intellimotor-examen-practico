@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 (async function inicializarAplicacion(){
-    const navegador= await puppeteer.launch({headless: false});
+    const navegador= await puppeteer.launch();
     const pagina = await navegador.newPage();
     await pagina.setViewport({width: 1920, height: 1080});
     await waitForLogin(pagina);
