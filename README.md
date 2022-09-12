@@ -21,7 +21,7 @@ Aplicacion de creacion de anuncios con webscrapping
     ```
 4. ### Instalar las dependecias del backend con el siguiente comando
     ```bash
-    $   npm run install
+    $   npm install
     ```
 5. ### Iniciar el servidor introduciendo el siguiente comando
     ```bash
@@ -37,7 +37,7 @@ Aplicacion de creacion de anuncios con webscrapping
     ```
 8. ### Instalar las dependecias del frontend con el siguiente comando
     ```bash
-    $   npm run install
+    $   npm install
     ```
 9. ### Inciar aplicacion de frontend introduciendo este comando
     ```bash
