@@ -19,19 +19,27 @@ Aplicacion de creacion de anuncios con webscrapping
     ```bash
     $   cd backend
     ```
-4. ### Iniciar el servidor introduciendo el siguiente comando
+4. ### Instalar las dependecias del backend con el siguiente comando
+    ```bash
+    $   npm run install
+    ```
+5. ### Iniciar el servidor introduciendo el siguiente comando
     ```bash
     $   npm run start
     ```
-5. ### Esperar a que la terminar imprima la siguiente linea
+6. ### Esperar a que la terminar imprima la siguiente linea
     ```bash
     2022-09-10T18:11:06.039Z [examen-backend] info: escuchando peticiones en puerto -> 8081
     ```
-6. ### Navegar en otra terminal al directorio de frontend
+7. ### Navegar en otra terminal al directorio de frontend
     ```bash
     $    cd frontend
     ```
-7. ### Inciar aplicacion de frontend introduciendo este comando
+8. ### Instalar las dependecias del frontend con el siguiente comando
+    ```bash
+    $   npm run install
+    ```
+9. ### Inciar aplicacion de frontend introduciendo este comando
     ```bash
     $    npm run start
     ```
